@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useUnifiedTopology: true,
       useNewUrlParser: true,
     }),
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
