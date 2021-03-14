@@ -9,6 +9,7 @@ import { MongoRepository } from 'typeorm';
 import { ObjectID } from 'mongodb';
 import { adminDto } from '../dto/admin.dto';
 import { secureAdminDto } from '../dto/secureAdmin.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminService {
@@ -26,7 +27,8 @@ export class AdminService {
     if (!adminresp) {
       throw new NotFoundException();
     }
-    if (adminresp && admin.password === adminresp.password) {
+    const isMatch = await bcrypt.compare(admin.password, adminresp.password);
+    if (adminresp && isMatch) {
       const adminObj: secureAdminDto = {
         email: adminresp.email,
       };
