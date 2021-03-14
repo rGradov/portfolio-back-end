@@ -1,4 +1,4 @@
 export class secureAdminDto {
   email: string;
-  token?: string;
+  access_token: string;
 }

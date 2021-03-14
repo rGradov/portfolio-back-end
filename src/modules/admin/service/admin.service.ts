@@ -18,16 +18,23 @@ export class AdminService {
     private readonly adminRepository: MongoRepository<Admin>,
     private jwtService: JwtService,
   ) { }
-  async registerAdmin(admin: Partial<Admin>): Promise<any> {
+  async register(admin: Partial<Admin>): Promise<secureAdminDto | any> {
     const payload = { email: admin.email };
-    const admindata = await this.adminRepository.save(new Admin(admin));
-    const data = {
-      email: admindata.email,
-      access_token: this.jwtService.sign(payload),
+    const adminresp = await this.adminRepository.findOne({
+      where: { email: admin.email },
+    });
+    if (!adminresp) {
+      const admindata = await this.adminRepository.save(new Admin(admin));
+      const data = {
+        email: admindata.email,
+        access_token: this.jwtService.sign(payload),
+      };
+      return data;
+    } else {
+      throw new ForbiddenException();
     }
-    return data;
   }
-  async validationAdmin(admin: adminDto): Promise<secureAdminDto | any> {
+  async login(admin: adminDto): Promise<secureAdminDto | any> {
     const adminresp = await this.adminRepository.findOne({
       where: { email: admin.email },
     });
@@ -36,8 +43,10 @@ export class AdminService {
     }
     const isMatch = await bcrypt.compare(admin.password, adminresp.password);
     if (adminresp && isMatch) {
+      const payload = { email: admin.email };
       const adminObj: secureAdminDto = {
         email: adminresp.email,
+        access_token: this.jwtService.sign(payload),
       };
       return adminObj;
     }
@@ -47,11 +56,5 @@ export class AdminService {
   }
   async deleteAdmin(email: string): Promise<any> {
     return this.adminRepository.delete({ email: email });
-  }
-  async login(admin: Partial<Admin>): Promise<any> {
-    const payload = { email: admin.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
   }
 }

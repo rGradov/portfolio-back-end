@@ -9,17 +9,14 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) { }
 
   @Post('register')
-  async registerAdmin(@Body() data: Partial<Admin>) {
-    return await this.adminService.registerAdmin(data);
+  async register(@Body() data: Partial<Admin>) {
+    return await this.adminService.register(data);
   }
   @Post('/login')
-  async login(@Body() data: Partial<Admin>) {
+  async login(@Body() data: adminDto) {
     return this.adminService.login(data);
   }
-  @Get()
-  async getAdminByEmail(@Body() data: adminDto) {
-    return await this.adminService.validationAdmin(data);
-  }
+
   @Delete('/del')
   @UseGuards(AuthGuard('jwt'))
   async deleteAdmin(email: string) {
