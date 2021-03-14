@@ -1,0 +1,17 @@
+{
+  "type": "mongodb",
+  "url": "mongodb+srv://admin:admin99@portfolio.00bhq.mongodb.net/portfolio?retryWrites=true&w=majority",
+  "dropSchema": false,
+  "synchronize": true,
+  "migrationsRun": false,
+  "logging": false,
+  "entities": [
+    "dist/**/*.entity{.ts,.js}"
+  ],
+  "migrations": [
+    "dist/**/db/migration/*{.ts,.js}"
+  ],
+  "cli": {
+    "migrationsDir": "db/migration"
+  }
+}
